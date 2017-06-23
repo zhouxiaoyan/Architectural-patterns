@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>module-模块化方式</title>
+</head>
+<body>
+	<script type="text/javascript">
+		/**
+			模块化方式适合团队间合作，各成员间互不影响共用一套代码。
+			这个机制有点像ng的依赖注入机制。尤其是类似angularJS的
+			各个模块之间的以来引用。
+		**/
+		var F={};
+		//创建包管理器
+		F.define=function(str,fn){
+			var parts=str.split('.'),
+				old=parent=this,
+				i=len=0;
+				if(parts[0]==='F'){
+					parts=parts.slice(1);
+				}
+				if(parts[0]==='define'||parts[0]==='module'){
+					return;
+				}
+				for(len=parts.length;i<len;i++){
+					if(typeof parent[parts[i]]==="undefined"){
+						parent[parts[i]]={};
+					}
+					old=parent;
+					parent=parent[parts[i]];
+				}
+				if(fn){
+					old[parts[--i]]=fn();
+				}
+				return this;
+		}
+
+		F.define('string',function(){
+			return {
+				trim:function(str){
+					return str.replace(/^\s+|\s+$/g,'');
+				}
+			}
+		});
+
+		F.module=function(){
+			var args=[].slice.call(arguments),
+				fn=args.pop(),
+				parts=args[0]&&args[0] instanceof Array?args[0]:args,
+				modules=[],
+				modIDs='',
+				i=0,
+				ilen=parts.length,
+				parent,j,jlen;
+
+			while(i<ilen){
+				if(typeof parts[i]==='string'){
+					parent=this;
+					modIDs=parts[i].replace(/^F\./,'').split(".");
+					for(j=0,jlen=modIDs.length;j<jlen;j++){
+						parent=parent[modIDs[j]]||false;
+					}
+					modules.push(parent);
+				}else{
+					modules.push(parts[i]);
+				}
+				i++;
+			}
+			fn.apply(null,modules);
+		};
+
+
+
+		F.module(["string"],function(str){
+			console.log(str);
+		});
+
+	</script>
+</body>
+</html>
