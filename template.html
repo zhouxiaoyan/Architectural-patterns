@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>widget模式-template</title>
+	<script type="text/javascript" src="./amd.js"></script>
+	<style type="text/css">
+		.tag_item{
+			display: block;
+			width: 400px;
+			height: 40px;
+			line-height: 40px;
+			text-align: center;
+			text-decoration: none;
+			color: #333;
+		}
+		.tag_item.selected{
+			color: #f60;
+		}
+	</style>
+</head>
+<body id="test">
+	<div id="demo_tag" class="template">
+		<div id="tag_cloud">
+			{% for(var i=0,len=tagCloud.length;i&lt;len;i++){ %}
+				{% var ctx=tagCloud[i]; %}
+				<a href="javascript:;" class="tag_item
+				{% if(ctx['is_selected']){ %} selected{% } %}" 
+				title="{%=ctx['title']%}">{%=ctx["text"]%}</a>
+			{% } %}
+		</div>
+	</div>
+	<script type="text/javascript">
+		var data={
+			tagCloud:[
+				{is_selected:true,title:"这是一本设计模式的书",text:"设计模式"},
+				{is_selected:false,title:"这是一本HTML的书",text:"HTML"},
+				{is_selected:null,title:"这是一本CSS的书",text:"CSS"},
+				{is_selected:"",title:"这是一本JavaScript的书",text:"JavaScript"},
+				{is_selected:"",title:"这是一本NODE的书",text:"NODE"},
+			]
+		};
+		F.module(["template","dom","event"],function(template,dom,event){
+			var str=template("demo_tag",data);
+			dom.html("test",str);
+			event.on(dom.g("tag_cloud"),"click",function(e){
+				e=e||window.event;
+				var oTar=e.target||e.srcElement;
+				if(oTar.nodeName=="A"){
+					[].forEach.call(oTar.parentNode.children,function(item,i){
+						item.className=item.className.replace(/\bselected\b/,"").trim();
+					});
+					oTar.className+=" selected";
+				}
+			})
+		});
+	</script>
+</body>
+</html>
