@@ -35,7 +35,7 @@ F.module("template",function(){
 	var _delTpl=function(str){
 		var _left="{%";
 		var _right="%}";
-
+//正则匹配  匹配要么匹配具体的数据    要么匹配某个范围数据   所以匹配什么范围的数据决定着正则怎么写。
 		return String(str)
 			   .replace(/&lt;/g,"<")
 			   .replace(/&gt;/g,">")
