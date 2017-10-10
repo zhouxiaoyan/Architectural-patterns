@@ -21,8 +21,18 @@
 </head>
 <body id="test">
 	<div id="demo_tag" class="template">
+		//%}被替换成template_array.push(';{%被替换成');最终这段代码被匹配成：
+			//<div id="tag_cloud">'); 
+			//for(var i=0,len=tagCloud.length;i<len;i++){ template_array.push(''); 
+                        //var ctx=tagCloud[i]; template_array.push('
+		//<a href="javascript:;" class="tag_item
+		//'); if(ctx['is_selected']){ template_array.push(' selected'); } template_array.push('" 
+		//	title="',typeof(ctx['title'])==='undefined'?'': ctx['title'],'">',
+		//typeof(ctx["text"])==='undefined'?'': ctx["text"],'</a>'); } template_array.push('</div>
 		<div id="tag_cloud">
+			
 			{% for(var i=0,len=tagCloud.length;i&lt;len;i++){ %}
+			
 				{% var ctx=tagCloud[i]; %}
 				<a href="javascript:;" class="tag_item
 				{% if(ctx['is_selected']){ %} selected{% } %}" 
